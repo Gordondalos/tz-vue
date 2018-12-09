@@ -12,21 +12,27 @@
                     </select>
 
                     <b>Category</b>
-                    <select v-model="selectCategory" class="custom-select mb-3">
+                    <select
+                            :disabled="!selectSector"
+                            v-model="selectCategory" class="custom-select mb-3">
                         <option :key="index" v-for="(sector, index) of cat" :value="sector">
                             {{sector.about}} ({{sector.price}})
                         </option>
                     </select>
 
                     <b>Linea</b>
-                    <select v-model="selectLinea" class="custom-select mb-3">
+                    <select
+                            :disabled="!selectSector || !selectCategory"
+                            v-model="selectLinea" class="custom-select mb-3">
                         <option :key="index" v-for="(linea, index) of lin" :value="linea">
                             {{linea.name}}
                         </option>
                     </select>
 
                     <b>Seat</b>
-                    <select v-model="selectSeat" class="custom-select mb-3">
+                    <select
+                            :disabled="!selectSector || !selectCategory || !selectLinea"
+                            v-model="selectSeat" class="custom-select mb-3">
                         <option :key="index" v-for="(se, index) of seat" :value="se">
                             {{se.seat}}
                         </option>
