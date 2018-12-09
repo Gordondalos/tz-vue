@@ -4,6 +4,8 @@
             <div class="row">
                 <div class="col-sm-12 col-md-6">
 
+                    <h3>Select your ticket</h3>
+
                     <b>Sector</b>
                     <select v-model="selectSector" class="custom-select mb-3">
                         <option :key="index" v-for="(sector, index) of sect" :value="sector">
