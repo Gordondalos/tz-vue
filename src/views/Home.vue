@@ -1,21 +1,31 @@
 <template>
     <div class="home">
-
+        <sectors
+                v-if="show"
+                :categories="categories"
+                :lines="lines"
+                :seats="seats"
+                :sectors="sectors"
+        ></sectors>
     </div>
 </template>
 
 <script lang="ts">
-  import { Component, Vue } from 'vue-property-decorator'
+  import { Component, Vue } from 'vue-property-decorator';
+  import Sectors from '../components/selectors/Selectors.vue';
 
   @Component({
-    components: {},
+    components: {
+      sectors: Sectors,
+    },
 
     data() {
       return {
         categories: [],
         lines: [],
         seats: [],
-        sectors: []
+        sectors: [],
+        show: false,
       }
     },
 
@@ -38,6 +48,7 @@
         this.lines = lines;
         this.seats = seats;
         this.sectors = sectors;
+        this.show = true;
         console.log(categories, lines, seats, sectors);
       }
     }
