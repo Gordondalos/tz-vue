@@ -76,6 +76,13 @@
 <script>
     export default {
 
+        props: [
+            'categories',
+            'lines',
+            'seats',
+            'sectors',
+        ],
+
         data() {
             return {
                 selectSector: '',
@@ -94,13 +101,6 @@
                 starSeat: [],
             }
         },
-
-        props: [
-            'categories',
-            'lines',
-            'seats',
-            'sectors',
-        ],
 
         created() {
             _.each( this.$props, ( data, key ) => {
