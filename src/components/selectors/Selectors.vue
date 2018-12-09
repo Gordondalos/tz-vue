@@ -36,10 +36,12 @@
                 <div class="col-sm-12 col-md-6">
 
                     <h3>Selected</h3>
-                    <div>Sector: {{selectSector.name}}</div>
+                    <div>Sector: {{selectSector.name}} ({{selectSector.id}})</div>
                     <div>Category: {{selectCategory.about}}</div>
                     <div>Linea: {{selectLinea.name}}</div>
                     <div>selectSeat: {{selectSeat.seat}}</div>
+
+                    <button @click="save(selectSeat)" class="btn btn-sm btn-info mt-4">Сохранить</button>
 
                 </div>
             </div>
@@ -80,40 +82,43 @@
             _.each( this.sectors, ( item ) => {
                 this.sect.push( item );
             } );
-            this.startSect = _.cloneDeep(this.sect);
+            this.startSect = _.cloneDeep( this.sect );
 
             _.each( this.categories, ( item ) => {
                 this.cat.push( item );
             } );
-            this.startCat = _.cloneDeep(this.cat);
+            this.startCat = _.cloneDeep( this.cat );
 
             _.each( this.lines, ( item ) => {
                 this.lin.push( item );
             } );
-            this.startLin = _.cloneDeep(this.lin);
+            this.startLin = _.cloneDeep( this.lin );
 
             _.each( this.seats, ( item ) => {
                 this.seat.push( item );
             } );
-            this.starSeat = _.cloneDeep(this.seat);
+            this.starSeat = _.cloneDeep( this.seat );
 
         },
 
         computed: {},
 
         methods: {
+            save( seat ) {
+                alert( seat.id );
+            },
 
             getAllLine( seats ) {
-                const unic = _.unionBy(seats, 'line');
+                const unic = _.unionBy( seats, 'line' );
                 const newLines = [];
-                _.each(unic, (item) => {
-                    newLines.push(_.find(this.startLin, it => it.id === item.line))
-                });
-               return newLines.reverse();
+                _.each( unic, ( item ) => {
+                    newLines.push( _.find( this.startLin, it => it.id === item.line ) )
+                } );
+                return newLines.reverse();
             },
 
 
-            getAllSeatsInThisSectorAndCategory(sector, category) {
+            getAllSeatsInThisSectorAndCategory( sector, category ) {
                 return _.filter( this.seat, ( seat ) => {
                     return category.id === seat.category && seat.status === 0 && sector.id === seat.sector;
                 } );
@@ -126,24 +131,25 @@
             },
 
             selectCategory( category ) {
-                this.seat = this.getAllSeatsInThisSectorAndCategory(this.selectSector, category );
-                if(this.seat.length === 0){
-                    alert('мест нет !!!');
+                this.seat = _.cloneDeep( this.getAllSeatsInThisSectorAndCategory( this.selectSector, category ) );
+                if ( this.seat.length === 0 ) {
+                    alert( 'мест нет !!!' );
                 }
+                console.log( this.seat.length );
                 this.lin = this.getAllLine( this.seat );
 
             },
 
             selectLinea( linea ) {
                 console.log( 'res linea', linea );
-                console.log( 'res seats - start', this.seats );
+                console.log( 'res seats - start', this.seat );
                 this.seat = _.filter( this.seat, ( seat ) => {
-                    return linea.id === seat.line &&
-                        this.selectCategory.id === seat.category &&
-                        this.selectSector === seat.sector &&
-                        seat.status === 0;
+                    return linea.id === seat.line
+                        && this.selectCategory.id === seat.category
+                        && seat.status === 0
+                        && this.selectSector.id === seat.sector;
                 } );
-                console.log( 'res seats - fin', this.seats );
+                console.log( 'res seats - fin', this.seat.length );
             },
             selectSeat( res ) {
                 console.log( 'res Seat', res );
