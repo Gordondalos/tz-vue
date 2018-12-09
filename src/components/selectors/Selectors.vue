@@ -104,14 +104,14 @@
 
         created() {
             _.each( this.$props, ( data, key ) => {
-                const obj = this.getCurentObjNameAndBacupObjName( key );
+                const obj = this.getCurrentObjNameAndBackupObjName( key );
                 this.normoliseDate( data, obj.currentObj, obj.backupObj );
             } );
         },
 
         methods: {
 
-            getCurentObjNameAndBacupObjName( name ) {
+            getCurrentObjNameAndBackupObjName( name ) {
                 switch ( name ) {
                     case'sectors':
                         return { currentObj: 'sect', backupObj: 'startSect' };
