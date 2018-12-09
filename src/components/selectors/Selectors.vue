@@ -132,9 +132,18 @@
 
 
             getAllSeatsInThisSectorAndCategory( sector, category ) {
-                return _.filter( this.seat, ( seat ) => {
+                return _.filter( this.starSeat, ( seat ) => {
                     return category.id === seat.category && seat.status === 0 && sector.id === seat.sector;
                 } );
+            },
+
+            checkSeats() {
+                if ( this.seat.length === 0 ) {
+                    setTimeout( () => {
+                        alert( 'мест нет !!!' );
+                    }, 100 )
+
+                }
             }
         },
 
@@ -144,18 +153,17 @@
                 this.selectLinea = '';
                 this.selectSeat = '';
                 this.seat = _.cloneDeep( this.getAllSeatsInThisSector( sector ) );
+                this.checkSeats();
                 this.cat = _.cloneDeep( this.getAllCategoryOnThisSector( this.seat ) );
+
             },
 
             selectCategory( category ) {
                 if ( category ) {
                     this.selectLinea = '';
                     this.selectSeat = '';
-
                     this.seat = _.cloneDeep( this.getAllSeatsInThisSectorAndCategory( this.selectSector, category ) );
-                    if ( this.seat.length === 0 ) {
-                        alert( 'мест нет !!!' );
-                    }
+                    this.checkSeats();
                     this.lin = _.cloneDeep( this.getAllLine( this.seat ) );
                 }
             },
@@ -163,12 +171,13 @@
             selectLinea( linea ) {
                 if ( linea ) {
                     this.selectSeat = '';
-                    this.seat = _.filter( this.seat, ( seat ) => {
+                    this.seat = _.filter( this.starSeat, ( seat ) => {
                         return linea.id === seat.line
                             && this.selectCategory.id === seat.category
                             && seat.status === 0
                             && this.selectSector.id === seat.sector;
                     } );
+                    this.checkSeats();
                 }
 
             },
