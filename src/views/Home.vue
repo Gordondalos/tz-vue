@@ -1,18 +1,47 @@
 <template>
-  <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js + TypeScript App"/>
-  </div>
+    <div class="home">
+
+    </div>
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator'
-import HelloWorld from '@/components/HelloWorld.vue' // @ is an alias to /src
+  import { Component, Vue } from 'vue-property-decorator'
 
-@Component({
-  components: {
-    HelloWorld
+  @Component({
+    components: {},
+
+    data() {
+      return {
+        categories: [],
+        lines: [],
+        seats: [],
+        sectors: []
+      }
+    },
+
+    async created() {
+      this.resource = this.$resource('js/front/data.js');
+      const response = await this.resource.get();
+      const result: {
+        errorCode: number,
+        response: {
+          categories: any,
+          lines: any,
+          seats: any,
+          sectors: any
+        }
+      } = response.body;
+
+      if (result.errorCode === 0) {
+        const { categories, lines, seats, sectors } = result.response;
+        this.categories = categories;
+        this.lines = lines;
+        this.seats = seats;
+        this.sectors = sectors;
+        console.log(categories, lines, seats, sectors);
+      }
+    }
+  })
+  export default class Home extends Vue {
   }
-})
-export default class Home extends Vue {}
 </script>
