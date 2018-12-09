@@ -73,7 +73,7 @@
 
                 startSect: [],
                 startCat: [],
-                startLin: [],
+                startLine: [],
                 starSeat: [],
             }
         },
@@ -100,7 +100,7 @@
             _.each( this.lines, ( item ) => {
                 this.lin.push( item );
             } );
-            this.startLin = _.cloneDeep( this.lin );
+            this.startLine = _.cloneDeep( this.lin );
 
             _.each( this.seats, ( item ) => {
                 this.seat.push( item );
@@ -116,23 +116,15 @@
                 alert( seat.id );
             },
 
-            getAllLine( seats ) {
-                const unic = _.unionBy( seats, 'line' );
-                const newLines = [];
+            getUnic(seats, type, startData){
+                const unic = _.unionBy( seats, type );
+                const arr = [];
                 _.each( unic, ( item ) => {
-                    newLines.push( _.find( this.startLin, it => it.id === item.line ) )
+                    arr.push( _.find( startData, it => it.id === item[type] ) )
                 } );
-                return newLines;
+                return arr;
             },
 
-            getAllCategoryOnThisSector( seats ) {
-                const unic = _.unionBy( seats, 'category' );
-                const newCategorys = [];
-                _.each( unic, ( item ) => {
-                    newCategorys.push( _.find( this.startCat, it => it.id === item.category ) )
-                } );
-                return newCategorys;
-            },
 
             getAllSeatsInThisSector( sector ) {
                 return _.filter( this.starSeat, seat => sector.id === seat.sector && seat.status === 0 );
@@ -163,7 +155,7 @@
                 this.seat = _.cloneDeep( this.getAllSeatsInThisSector( sector ) );
                 this.checkSeats();
                 if(this.seat.length > 0){
-                    this.cat = _.cloneDeep( this.getAllCategoryOnThisSector( this.seat ) );
+                    this.cat = this.getUnic( this.seat, 'category', this.startCat );
                 }
 
 
@@ -176,7 +168,7 @@
                     this.seat = _.cloneDeep( this.getAllSeatsInThisSectorAndCategory( this.selectSector, category ) );
                     this.checkSeats();
                     if(this.seat.length > 0){
-                        this.lin = _.cloneDeep( this.getAllLine( this.seat ) );
+                        this.lin = this.getUnic( this.seat, 'line',  this.startLine);
                     }
                 }
             },
