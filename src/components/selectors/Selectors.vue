@@ -13,7 +13,7 @@
 
                     <b>Category</b>
                     <select
-                            :disabled="!selectSector"
+                            :disabled="!selectSector || seat.length === 0"
                             v-model="selectCategory" class="custom-select mb-3">
                         <option :key="index" v-for="(sector, index) of cat" :value="sector">
                             {{sector.about}} ({{sector.price}})
@@ -22,7 +22,7 @@
 
                     <b>Linea</b>
                     <select
-                            :disabled="!selectSector || !selectCategory"
+                            :disabled="!selectSector || !selectCategory || seat.length === 0"
                             v-model="selectLinea" class="custom-select mb-3">
                         <option :key="index" v-for="(linea, index) of lin" :value="linea">
                             {{linea.name}}
@@ -31,7 +31,7 @@
 
                     <b>Seat</b>
                     <select
-                            :disabled="!selectSector || !selectCategory || !selectLinea"
+                            :disabled="!selectSector || !selectCategory || !selectLinea || seat.length === 0"
                             v-model="selectSeat" class="custom-select mb-3">
                         <option :key="index" v-for="(se, index) of seat" :value="se">
                             {{se.seat}}
@@ -133,7 +133,7 @@
             },
 
             getAllSeatsInThisSector( sector ) {
-                return _.filter( this.starSeat, item => sector.id === item.sector );
+                return _.filter( this.starSeat, seat => sector.id === seat.sector && seat.status === 0 );
             },
 
 
@@ -160,7 +160,10 @@
                 this.selectSeat = '';
                 this.seat = _.cloneDeep( this.getAllSeatsInThisSector( sector ) );
                 this.checkSeats();
-                this.cat = _.cloneDeep( this.getAllCategoryOnThisSector( this.seat ) );
+                if(this.seat.length > 0){
+                    this.cat = _.cloneDeep( this.getAllCategoryOnThisSector( this.seat ) );
+                }
+
 
             },
 
@@ -170,7 +173,9 @@
                     this.selectSeat = '';
                     this.seat = _.cloneDeep( this.getAllSeatsInThisSectorAndCategory( this.selectSector, category ) );
                     this.checkSeats();
-                    this.lin = _.cloneDeep( this.getAllLine( this.seat ) );
+                    if(this.seat.length > 0){
+                        this.lin = _.cloneDeep( this.getAllLine( this.seat ) );
+                    }
                 }
             },
 
