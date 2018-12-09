@@ -82,6 +82,7 @@
                 selectCategory: '',
                 selectLinea: '',
                 selectSeat: '',
+
                 sect: [],
                 cat: [],
                 lin: [],
@@ -102,32 +103,34 @@
         ],
 
         created() {
-
-            _.each( this.sectors, ( item ) => {
-                this.sect.push( item );
+            _.each( this.$props, ( data, key ) => {
+                const obj = this.getCurentObjNameAndBacupObjName( key );
+                this.normoliseDate( data, obj.currentObj, obj.backupObj );
             } );
-            this.startSect = _.cloneDeep( this.sect );
-
-            _.each( this.categories, ( item ) => {
-                this.cat.push( item );
-            } );
-            this.startCat = _.cloneDeep( this.cat );
-
-            _.each( this.lines, ( item ) => {
-                this.lin.push( item );
-            } );
-            this.startLine = _.cloneDeep( this.lin );
-
-            _.each( this.seats, ( item ) => {
-                this.seat.push( item );
-            } );
-            this.starSeat = _.cloneDeep( this.seat );
-
         },
 
-        computed: {},
-
         methods: {
+
+            getCurentObjNameAndBacupObjName( name ) {
+                switch ( name ) {
+                    case'sectors':
+                        return { currentObj: 'sect', backupObj: 'startSect' };
+                    case'categories':
+                        return { currentObj: 'cat', backupObj: 'startCat' };
+                    case'lines':
+                        return { currentObj: 'lin', backupObj: 'startLine' };
+                    case'seats':
+                        return { currentObj: 'seat', backupObj: 'starSeat' };
+                }
+            },
+
+            normoliseDate( startDate, currentObj, backupObj ) {
+                _.each( startDate, ( item ) => {
+                    this[ currentObj ].push( item );
+                } );
+                this[ backupObj ] = _.cloneDeep( this[ currentObj ] );
+            },
+
             save( seat ) {
                 alert( seat.id );
             },
@@ -168,7 +171,7 @@
                 this.selectCategory = '';
                 this.selectLinea = '';
                 this.selectSeat = '';
-                this.seat = _.cloneDeep( this.getAllSeatsInThisSector( sector ) );
+                this.seat = this.getAllSeatsInThisSector( sector );
                 this.checkSeats();
                 if ( this.seat.length > 0 ) {
                     this.cat = this.getUniq( this.seat, 'category', this.startCat );
@@ -181,7 +184,7 @@
                 if ( category ) {
                     this.selectLinea = '';
                     this.selectSeat = '';
-                    this.seat = _.cloneDeep( this.getAllSeatsInThisSectorAndCategory( this.selectSector, category ) );
+                    this.seat = this.getAllSeatsInThisSectorAndCategory( this.selectSector, category );
                     this.checkSeats();
                     if ( this.seat.length > 0 ) {
                         this.lin = this.getUniq( this.seat, 'line', this.startLine );
