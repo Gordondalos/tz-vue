@@ -39,7 +39,7 @@
                     <div>Sector: {{selectSector.name}} ({{selectSector.id}})</div>
                     <div>Category: {{selectCategory.about}}</div>
                     <div>Linea: {{selectLinea.name}}</div>
-                    <div>selectSeat: {{selectSeat.seat}}</div>
+                    <div>Seat: {{selectSeat.seat}}</div>
 
                     <button @click="save(selectSeat)" class="btn btn-sm btn-info mt-4">Сохранить</button>
 
@@ -117,7 +117,7 @@
                 return newLines;
             },
 
-            getAllCategoryOnThisSector(seats){
+            getAllCategoryOnThisSector( seats ) {
                 const unic = _.unionBy( seats, 'category' );
                 const newCategorys = [];
                 _.each( unic, ( item ) => {
@@ -126,8 +126,8 @@
                 return newCategorys;
             },
 
-            getAllSeatsInThisSector(sector){
-              return _.filter(this.starSeat, item => sector.id === item.sector);
+            getAllSeatsInThisSector( sector ) {
+                return _.filter( this.starSeat, item => sector.id === item.sector );
             },
 
 
@@ -140,26 +140,37 @@
 
         watch: {
             selectSector( sector ) {
-                this.seat = _.cloneDeep(this.getAllSeatsInThisSector(sector));
-                this.cat = _.cloneDeep(this.getAllCategoryOnThisSector(this.seat));
+                this.selectCategory = '';
+                this.selectLinea = '';
+                this.selectSeat = '';
+                this.seat = _.cloneDeep( this.getAllSeatsInThisSector( sector ) );
+                this.cat = _.cloneDeep( this.getAllCategoryOnThisSector( this.seat ) );
             },
 
             selectCategory( category ) {
-                this.seat = _.cloneDeep( this.getAllSeatsInThisSectorAndCategory( this.selectSector, category ) );
-                if ( this.seat.length === 0 ) {
-                    alert( 'мест нет !!!' );
-                }
-                this.lin = _.cloneDeep(this.getAllLine( this.seat ));
+                if ( category ) {
+                    this.selectLinea = '';
+                    this.selectSeat = '';
 
+                    this.seat = _.cloneDeep( this.getAllSeatsInThisSectorAndCategory( this.selectSector, category ) );
+                    if ( this.seat.length === 0 ) {
+                        alert( 'мест нет !!!' );
+                    }
+                    this.lin = _.cloneDeep( this.getAllLine( this.seat ) );
+                }
             },
 
             selectLinea( linea ) {
-                this.seat = _.filter( this.seat, ( seat ) => {
-                    return linea.id === seat.line
-                        && this.selectCategory.id === seat.category
-                        && seat.status === 0
-                        && this.selectSector.id === seat.sector;
-                } );
+                if ( linea ) {
+                    this.selectSeat = '';
+                    this.seat = _.filter( this.seat, ( seat ) => {
+                        return linea.id === seat.line
+                            && this.selectCategory.id === seat.category
+                            && seat.status === 0
+                            && this.selectSector.id === seat.sector;
+                    } );
+                }
+
             },
             selectSeat( res ) {
                 console.log( 'res Seat', res );
