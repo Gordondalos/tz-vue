@@ -44,10 +44,26 @@
                 <div class="col-sm-12 col-md-6">
 
                     <h3>Selected</h3>
-                    <div>Sector: {{selectSector.name}} ({{selectSector.id}})</div>
-                    <div>Category: {{selectCategory.about}}</div>
-                    <div>Linea: {{selectLinea.name}}</div>
-                    <div>Seat: {{selectSeat.seat}}</div>
+                    <div>Sector:
+                        <span v-if="selectSector">
+                            {{selectSector.name}} ({{selectSector.id}})
+                        </span>
+                    </div>
+                    <div>Category:
+                        <span v-if="selectCategory">
+                            {{selectCategory.about}}
+                        </span>
+                    </div>
+                    <div>Linea:
+                        <span v-if="selectLinea">
+                            {{selectLinea.name}}
+                        </span>
+                    </div>
+                    <div>Seat:
+                        <span v-if="selectSeat">
+                            {{selectSeat.seat}}
+                        </span>
+                    </div>
 
                     <button @click="save(selectSeat)" class="btn btn-sm btn-info mt-4">Сохранить</button>
 
@@ -116,11 +132,11 @@
                 alert( seat.id );
             },
 
-            getUnic(seats, type, startData){
+            getUniq( seats, type, startData ) {
                 const unic = _.unionBy( seats, type );
                 const arr = [];
                 _.each( unic, ( item ) => {
-                    arr.push( _.find( startData, it => it.id === item[type] ) )
+                    arr.push( _.find( startData, it => it.id === item[ type ] ) )
                 } );
                 return arr;
             },
@@ -154,8 +170,8 @@
                 this.selectSeat = '';
                 this.seat = _.cloneDeep( this.getAllSeatsInThisSector( sector ) );
                 this.checkSeats();
-                if(this.seat.length > 0){
-                    this.cat = this.getUnic( this.seat, 'category', this.startCat );
+                if ( this.seat.length > 0 ) {
+                    this.cat = this.getUniq( this.seat, 'category', this.startCat );
                 }
 
 
@@ -167,8 +183,8 @@
                     this.selectSeat = '';
                     this.seat = _.cloneDeep( this.getAllSeatsInThisSectorAndCategory( this.selectSector, category ) );
                     this.checkSeats();
-                    if(this.seat.length > 0){
-                        this.lin = this.getUnic( this.seat, 'line',  this.startLine);
+                    if ( this.seat.length > 0 ) {
+                        this.lin = this.getUniq( this.seat, 'line', this.startLine );
                     }
                 }
             },
