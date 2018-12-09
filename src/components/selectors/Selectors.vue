@@ -114,7 +114,20 @@
                 _.each( unic, ( item ) => {
                     newLines.push( _.find( this.startLin, it => it.id === item.line ) )
                 } );
-                return newLines.reverse();
+                return newLines;
+            },
+
+            getAllCategoryOnThisSector(seats){
+                const unic = _.unionBy( seats, 'category' );
+                const newCategorys = [];
+                _.each( unic, ( item ) => {
+                    newCategorys.push( _.find( this.startCat, it => it.id === item.category ) )
+                } );
+                return newCategorys;
+            },
+
+            getAllSeatsInThisSector(sector){
+              return _.filter(this.starSeat, item => sector.id === item.sector);
             },
 
 
@@ -127,7 +140,8 @@
 
         watch: {
             selectSector( sector ) {
-                this.cat = _.filter( this.cat, ( item ) => sector.category === item.id );
+                this.seat = this.getAllSeatsInThisSector(sector);
+                this.cat = this.getAllCategoryOnThisSector(this.seat);
             },
 
             selectCategory( category ) {
