@@ -21,7 +21,7 @@
                     <b>Linea</b>
                     <select v-model="selectLinea" class="custom-select mb-3">
                         <option :key="index" v-for="(linea, index) of lin" :value="linea">
-                           {{linea.name}}
+                            {{linea.name}}
                         </option>
                     </select>
 
@@ -41,11 +41,6 @@
                     <div>Linea: {{selectLinea.name}}</div>
                     <div>selectSeat: {{selectSeat.seat}}</div>
 
-
-
-
-
-
                 </div>
             </div>
         </div>
@@ -61,6 +56,15 @@
                 selectCategory: '',
                 selectLinea: '',
                 selectSeat: '',
+                sect: [],
+                cat: [],
+                lin: [],
+                seat: [],
+
+                startSect: [],
+                startCat: [],
+                startLin: [],
+                starSeat: [],
             }
         },
 
@@ -71,54 +75,79 @@
             'sectors',
         ],
 
-        computed: {
-            cat() {
-                const cat = [];
-                _.each( this.categories, ( item ) => {
-                    cat.push( item );
-                } );
-                return cat;
+        created() {
+
+            _.each( this.sectors, ( item ) => {
+                this.sect.push( item );
+            } );
+            this.startSect = _.cloneDeep(this.sect);
+
+            _.each( this.categories, ( item ) => {
+                this.cat.push( item );
+            } );
+            this.startCat = _.cloneDeep(this.cat);
+
+            _.each( this.lines, ( item ) => {
+                this.lin.push( item );
+            } );
+            this.startLin = _.cloneDeep(this.lin);
+
+            _.each( this.seats, ( item ) => {
+                this.seat.push( item );
+            } );
+            this.starSeat = _.cloneDeep(this.seat);
+
+        },
+
+        computed: {},
+
+        methods: {
+
+            getAllLine( seats ) {
+                const unic = _.unionBy(seats, 'line');
+                const newLines = [];
+                _.each(unic, (item) => {
+                    newLines.push(_.find(this.startLin, it => it.id === item.line))
+                });
+               return newLines.reverse();
             },
-            lin() {
-                const lin = [];
-                _.each( this.lines, ( item ) => {
-                    lin.push( item );
+
+
+            getAllSeatsInThisSectorAndCategory(sector, category) {
+                return _.filter( this.seat, ( seat ) => {
+                    return category.id === seat.category && seat.status === 0 && sector.id === seat.sector;
                 } );
-                console.log( 'lines', lin );
-                return lin;
-            },
-            seat() {
-                const seat = [];
-                _.each( this.seats, ( item ) => {
-                    seat.push( item );
-                } );
-                console.log( 'seats', seat );
-                return seat;
-            },
-            sect() {
-                const sect = [];
-                _.each( this.sectors, ( item ) => {
-                    sect.push( item );
-                } );
-                console.log( 'sectors', sect );
-                return sect;
             }
         },
 
         watch: {
-            selectCategory( res ) {
-                console.log( 'res category', res );
+            selectSector( sector ) {
+                this.cat = _.filter( this.cat, ( item ) => sector.category === item.id );
             },
-            selectLinea( res ) {
-                console.log( 'res linea', res );
+
+            selectCategory( category ) {
+                this.seat = this.getAllSeatsInThisSectorAndCategory(this.selectSector, category );
+                if(this.seat.length === 0){
+                    alert('мест нет !!!');
+                }
+                this.lin = this.getAllLine( this.seat );
+
+            },
+
+            selectLinea( linea ) {
+                console.log( 'res linea', linea );
+                console.log( 'res seats - start', this.seats );
+                this.seat = _.filter( this.seat, ( seat ) => {
+                    return linea.id === seat.line &&
+                        this.selectCategory.id === seat.category &&
+                        this.selectSector === seat.sector &&
+                        seat.status === 0;
+                } );
+                console.log( 'res seats - fin', this.seats );
             },
             selectSeat( res ) {
                 console.log( 'res Seat', res );
-            },
-            selectSector( res ) {
-                console.log( 'res sector', res );
             }
-
 
         }
 

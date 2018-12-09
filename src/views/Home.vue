@@ -49,7 +49,6 @@
         this.seats = seats;
         this.sectors = sectors;
         this.show = true;
-        console.log(categories, lines, seats, sectors);
       }
     }
   })
