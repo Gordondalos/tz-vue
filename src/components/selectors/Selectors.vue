@@ -140,8 +140,8 @@
 
         watch: {
             selectSector( sector ) {
-                this.seat = this.getAllSeatsInThisSector(sector);
-                this.cat = this.getAllCategoryOnThisSector(this.seat);
+                this.seat = _.cloneDeep(this.getAllSeatsInThisSector(sector));
+                this.cat = _.cloneDeep(this.getAllCategoryOnThisSector(this.seat));
             },
 
             selectCategory( category ) {
@@ -149,21 +149,17 @@
                 if ( this.seat.length === 0 ) {
                     alert( 'мест нет !!!' );
                 }
-                console.log( this.seat.length );
-                this.lin = this.getAllLine( this.seat );
+                this.lin = _.cloneDeep(this.getAllLine( this.seat ));
 
             },
 
             selectLinea( linea ) {
-                console.log( 'res linea', linea );
-                console.log( 'res seats - start', this.seat );
                 this.seat = _.filter( this.seat, ( seat ) => {
                     return linea.id === seat.line
                         && this.selectCategory.id === seat.category
                         && seat.status === 0
                         && this.selectSector.id === seat.sector;
                 } );
-                console.log( 'res seats - fin', this.seat.length );
             },
             selectSeat( res ) {
                 console.log( 'res Seat', res );
