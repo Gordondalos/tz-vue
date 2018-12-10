@@ -1,3 +1,7 @@
+# Тестовое задание приложено в документа tz.docx
+Результат выполнения
+https://www.youtube.com/watch?v=JKb5Jobiaug&feature=youtu.be
+
 # madisonNY
 
 ## Project setup
